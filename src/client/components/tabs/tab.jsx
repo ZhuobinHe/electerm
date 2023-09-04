@@ -278,7 +278,8 @@ export default class Tab extends React.Component {
     res.push({
       func: 'dup',
       icon: 'CopyOutlined',
-      text: e('duplicate')
+      text: e('duplicate'),
+      subText: `${ctrlOrCmd} + T`
     })
     res.push({
       disabled: isSshConfig,

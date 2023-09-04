@@ -48,6 +48,14 @@ export default class Sessions extends Component {
             this.state.currentTabId
           )
         }
+      } else if (keyControlPress(e) && keyPressed(e, 't')) {
+        e.stopPropagation()
+        e.preventDefault()
+        if (this.state.tabs.length >= 1) {
+          this.onDuplicateTab(
+            this.getCurrentTab()
+          )
+        }
       }
     })
   }

@@ -82,7 +82,8 @@ export default class Term extends Component {
       tempPassword: '',
       passType: 'password',
       zmodemTransfer: null,
-      lines: []
+      lines: [],
+      batchSwitch: null
     }
   }
 
@@ -288,7 +289,14 @@ export default class Term extends Component {
       )
     ) {
       this.searchPrev(keyword, options)
+    } else if (
+      action === terminalActions.syncInput
+    ) {
+      if  (propSplitId !== activeSplitId) {
+        this.attachAddon._sendData(cmd)
+      }
     }
+
     const isActiveTerminal = this.isActiveTerminal()
     if (
       type === 'focus' &&
@@ -324,6 +332,16 @@ export default class Term extends Component {
     ) {
       e.stopPropagation()
       this.copySelectionToClipboard()
+    } else if (
+      keyControlPressed(e) &&
+      !keyShiftPressed(e) &&
+      keyPressed(e, 'v') &&
+      e.type === 'keydown'
+    ) {
+      e.stopPropagation()
+      e.preventDefault()
+      this.onPaste()
+      return false
     } else if (id === this.props.id) {
       e.stopPropagation()
       this.term.selectAll()
@@ -350,6 +368,25 @@ export default class Term extends Component {
         return false
       }
     } else if (
+      keyControlPressed(e) && e.altKey && !keyShiftPressed(e) &&
+      (
+        keyPressed(e, 'ArrowRight') ||
+        keyPressed(e, 'ArrowLeft') ||
+        keyPressed(e, 'ArrowUp') ||
+        keyPressed(e, 'ArrowDown')
+      )
+    ) {
+      e.stopPropagation()
+      e.preventDefault()
+      if (e.type === 'keydown') {
+          if (keyPressed(e, "ArrowRight")) {
+            window.store.clickNextTab()
+          } else if (keyPressed(e, "ArrowLeft")) {
+            window.store.clickPrevTab()
+          }
+      }
+      return false
+    } else if (
       keyControlPressed(e) &&
       keyPressed(e, 'ArrowUp') && this.bufferMode === 'alternate'
     ) {
@@ -365,6 +402,8 @@ export default class Term extends Component {
       keyPressed(e, 'insert')
     ) {
       this.tryInsertSelected()
+    } else if (e.ctrlKey && !e.altKey && (keyPressed(e, 'w') || keyPressed(e, 't')))  {
+      return false
     }
   }
 
@@ -379,8 +418,7 @@ export default class Term extends Component {
 
   onSelection = () => {
     if (
-      !this.props.config.copyWhenSelect ||
-      window.store.onOperation
+      !this.props.config.copyWhenSelect
     ) {
       return false
     }
@@ -648,6 +686,7 @@ export default class Term extends Component {
     }
     this.term.paste(selected)
     this.term.focus()
+    this.onSyncInput(selected)
   }
 
   toggleSearch = () => {
@@ -1022,7 +1061,23 @@ export default class Term extends Component {
     window.store.triggerResize()
   }
 
+  onSyncInput = (input) => {
+    const { id: propSplitId } = this.props
+    if (this.state.batchSwitch === null) {
+      this.setState({batchSwitch: document.getElementById("_id_batchSwitch")})
+    }
+
+    if (this.state.batchSwitch.ariaChecked == "true") {
+      postMessage({
+        action: terminalActions.syncInput,
+        activeSplitId: propSplitId,
+        cmd: input
+      })
+    }
+  }
+
   onKey = (key, e) => {
+    this.onSyncInput(key.key)
     // log.log('onKey', key, e)
   }
 

@@ -7,7 +7,7 @@
   "scripts": {
     "app": "node build/bin/app",
     "build": "node build/bin/webpack-build",
-    "start": "./node_modules/.bin/webpack serve -c build/webpack/webpack.config.js",
+    "start": ".\\node_modules\\.bin\\webpack.cmd serve -c build\\webpack\\webpack.config.js",
     "icon": "node build/bin/icon",
     "ver": "node build/bin/generate-version",
     "clean": "node build/bin/clean",
@@ -17,7 +17,7 @@
     "postpublish": "node build/bin/postpublish",
     "prepare-file": "node build/bin/prepare",
     "prepare-test": "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm i -E playwright@1.28.1 --no-save && npm i -E @playwright/test@1.28.1 --no-save",
-    "output": "./node_modules/.bin/electron-builder",
+    "output": ".\\node_modules\\.bin\\electron-builder.cmd",
     "release": "npm run pre-test && npm run output",
     "install": "node build/bin/install",
     "postinstall": "node build/bin/post-install",

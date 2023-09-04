@@ -22,7 +22,7 @@ export default class BatchInput extends Component {
     cmd: '',
     toAll: false,
     open: false,
-    enter: false
+    enter: true
   }
 
   componentWillUnmount () {
@@ -68,6 +68,7 @@ export default class BatchInput extends Component {
     this.setState({
       toAll
     })
+    window.store.focus()
   }
 
   handleBlur = () => {
@@ -139,8 +140,6 @@ export default class BatchInput extends Component {
     return (
       <span
         className={cls}
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
       >
         <span className='bi-compact'>
           <Button
@@ -164,6 +163,7 @@ export default class BatchInput extends Component {
           </AutoComplete>
           <Tooltip title={e('runInAllTerminals')}>
             <Switch
+              id="_id_batchSwitch"
               className='mg1l'
               checked={toAll}
               onChange={this.handleChangeAll}

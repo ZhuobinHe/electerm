@@ -237,7 +237,8 @@ export const terminalActions = {
   openTerminalSearch: 'open-terminal-search',
   doSearchNext: 'do-search-next',
   doSearchPrev: 'do-search-prev',
-  zoom: 'zoom-terminal'
+  zoom: 'zoom-terminal',
+  syncInput: 'sync-input'
 }
 export const fileActions = {
   cancel: 'cancel',
